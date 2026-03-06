@@ -1,0 +1,183 @@
+"""
+Real-Time Vehicle Number Plate Detection Web Application
+Flask backend with OpenCV for video processing and EasyOCR for text recognition
+"""
+
+import cv2
+import numpy as np
+import imutils
+import easyocr
+import torch
+from flask import Flask, render_template, Response, jsonify
+from flask_cors import CORS
+import threading
+import time
+from collections import deque
+
+app = Flask(__name__)
+CORS(app)
+
+# Initialize EasyOCR reader (load once for performance)
+print("Loading EasyOCR model... This may take a moment.")
+reader = easyocr.Reader(['en'], gpu=torch.cuda.is_available())
+print("EasyOCR model loaded successfully!")
+
+# Global variables for video processing
+frame_buffer = deque(maxlen=1)
+processing_lock = threading.Lock()
+current_plate_text = "No plate detected"
+detection_active = True
+
+def detect_number_plate(frame):
+    """
+    Detect number plate in a frame and extract text using OCR
+    Returns: processed frame with bounding box and detected text
+    """
+    global current_plate_text
+    
+    if frame is None:
+        return frame, "No frame"
+    
+    # Make a copy of the frame
+    img = frame.copy()
+    
+    # Convert to grayscale
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
+    # Apply bilateral filter for noise reduction
+    bfilter = cv2.bilateralFilter(gray, 11, 17, 17)
+    
+    # Edge detection
+    edged = cv2.Canny(bfilter, 30, 200)
+    
+    # Find contours
+    keypoints = cv2.findContours(edged.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours = imutils.grab_contours(keypoints)
+    contours = sorted(contours, key=cv2.contourArea, reverse=True)[:10]
+    
+    location = None
+    
+    # Find rectangular contours (potential number plates)
+    for contour in contours:
+        approx = cv2.approxPolyDP(contour, 10, True)
+        if len(approx) == 4:
+            location = approx
+            break
+    
+    detected_text = "No plate detected"
+    
+    if location is not None:
+        # Create mask for the detected region
+        mask = np.zeros(gray.shape, np.uint8)
+        new_image = cv2.drawContours(mask, [location], 0, 255, -1)
+        new_image = cv2.bitwise_and(img, img, mask=mask)
+        
+        # Get coordinates
+        (x, y) = np.where(mask == 255)
+        (x1, y1) = (np.min(x), np.min(y))
+        (x2, y2) = (np.max(x), np.max(y))
+        
+        # Crop the number plate region
+        cropped = gray[x1:x2+1, y1:y2+1]
+        
+        # Apply OCR to extract text
+        try:
+            results = reader.readtext(cropped)
+            if results:
+                # Get the text with highest confidence
+                best_result = max(results, key=lambda x: x[2])
+                detected_text = best_result[1]
+                confidence = best_result[2]
+                print(f"Detected: {detected_text} (Confidence: {confidence:.2f})")
+        except Exception as e:
+            print(f"OCR Error: {e}")
+        
+        # Draw bounding box on the image
+        cv2.drawContours(img, [location], -1, (0, 255, 0), 3)
+        
+        # Draw text on image
+        cv2.putText(img, detected_text, (x1, y1 - 10), 
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+        
+        # Draw rectangle around the plate
+        cv2.rectangle(img, (y1, x1), (y2, x2), (0, 255, 0), 2)
+    
+    current_plate_text = detected_text
+    return img, detected_text
+
+def generate_frames():
+    """
+    Generator function for streaming video frames
+    """
+    global detection_active
+    
+    # Initialize camera
+    camera = cv2.VideoCapture(0)
+    
+    if not camera.isOpened():
+        print("Error: Could not open camera")
+        return
+    
+    print("Camera started successfully!")
+    
+    while detection_active:
+        success, frame = camera.read()
+        
+        if not success:
+            print("Failed to capture frame")
+            break
+        
+        # Process frame for number plate detection
+        with processing_lock:
+            processed_frame, plate_text = detect_number_plate(frame)
+        
+        # Encode frame as JPEG
+        ret, buffer = cv2.imencode('.jpg', processed_frame)
+        frame_bytes = buffer.tobytes()
+        
+        # Yield frame in multipart format for streaming
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+        
+        # Small delay to control frame rate
+        time.sleep(0.03)
+    
+    camera.release()
+    print("Camera released")
+
+@app.route('/')
+def index():
+    """Render the main page"""
+    return render_template('index.html')
+
+@app.route('/video_feed')
+def video_feed():
+    """Video streaming route"""
+    return Response(
+        generate_frames(),
+        mimetype='multipart/x-mixed-replace; boundary=frame'
+    )
+
+@app.route('/status')
+def status():
+    """Return current detection status"""
+    return jsonify({
+        'status': 'active',
+        'detection_active': detection_active,
+        'current_plate': current_plate_text
+    })
+
+@app.route('/toggle_detection', methods=['POST'])
+def toggle_detection():
+    """Toggle detection on/off"""
+    global detection_active
+    detection_active = not detection_active
+    return jsonify({
+        'detection_active': detection_active,
+        'message': 'Detection enabled' if detection_active else 'Detection disabled'
+    })
+
+if __name__ == '__main__':
+    print("Starting Vehicle Number Plate Detection App...")
+    print("Open http://localhost:5000 in your browser")
+    app.run(debug=True, host='0.0.0.0', port=5000)

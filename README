@@ -1,0 +1,252 @@
+# 🚗 Vehicle Number Plate Detection - Real-Time Web Application
+
+A real-time AI-powered web application that detects vehicle number plates from live camera feed using Computer Vision and OCR technology.
+
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
+![Flask](https://img.shields.io/badge/Flask-3.0.0-green.svg)
+
+## ✨ Features
+
+- 🎥 **Real-Time Detection** - Live video streaming from webcam
+- 🔍 **Number Plate Detection** - OpenCV contour-based detection
+- 📝 **Text Recognition** - EasyOCR for accurate text extraction
+- 🌐 **Web Interface** - Modern, responsive design
+- 📱 **Mobile Friendly** - Works on all devices
+- ☁️ **Deployment Ready** - Easy deployment to cloud platforms
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|------------|---------|
+| **Python** | Backend logic |
+| **Flask** | Web framework |
+| **OpenCV** | Computer vision & image processing |
+| **EasyOCR** | Optical Character Recognition |
+| **NumPy** | Numerical computing |
+| **imutils** | Image processing utilities |
+| **HTML/CSS/JS** | Modern responsive frontend |
+
+## 📁 Project Structure
+
+```
+vehicle-number-plate-detection/
+├── app.py                 # Flask application with video processing
+├── requirements.txt       # Python dependencies
+├── Procfile              # Deployment configuration
+├── env_example.txt       # Environment variables template
+├── templates/
+│   └── index.html        # Main web interface
+├── static/
+│   ├── style.css         # Modern styling
+│   └── script.js         # Frontend JavaScript
+└── README.md             # This file
+```
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Python 3.8 or higher
+- Webcam/Camera
+- Modern web browser
+
+### Installation
+
+1. **Clone or navigate to the project directory**
+   
+```bash
+   cd "Vehicle Number Plate Detection"
+   
+```
+
+2. **Create virtual environment (recommended)**
+   
+```bash
+   python -m venv venv
+   # Windows
+   venv\Scripts\activate
+   # Linux/Mac
+   source venv/bin/activate
+   
+```
+
+3. **Install dependencies**
+   
+```bash
+   pip install -r requirements.txt
+   
+```
+
+4. **Run the application**
+   
+```bash
+   python app.py
+   
+```
+
+5. **Open your browser**
+   
+```
+   http://localhost:5000
+   
+```
+
+## 📖 Usage
+
+1. **Allow camera access** when prompted by the browser
+2. **Position a vehicle** with visible number plate in front of the camera
+3. **Watch** as the system detects and highlights the number plate
+4. **View extracted text** displayed in real-time
+5. **Use controls** to pause/resume detection or capture frames
+
+### Keyboard Shortcuts
+- `Space` - Toggle detection on/off
+- `C` - Capture current frame
+
+## ☁️ Deployment
+
+### Render.com (Recommended - Free)
+
+1. **Push to GitHub**
+   
+```bash
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git push origin main
+   
+```
+
+2. **Create Render Account**
+   - Sign up at [render.com](https://render.com)
+   - Connect your GitHub repository
+
+3. **Create Web Service**
+   - New → Web Service
+   - Select your repository
+   - Build Command: `pip install -r requirements.txt`
+   - Start Command: `gunicorn app:app`
+   - Create the service
+
+4. **Environment Variables**
+   - Add variables from `env_example.txt`
+   - Set `PORT` to `10000` (Render default)
+
+### Railway.app
+
+1. **Push to GitHub**
+2. **Create Railway Project**
+   - New → Deploy from GitHub
+   - Select repository
+   - Add environment variables
+   - Deploy
+
+### Heroku
+
+1. **Install Heroku CLI**
+2. **Login and create app**
+   
+```bash
+   heroku login
+   heroku create your-app-name
+   
+```
+3. **Deploy**
+   
+```bash
+   git push heroku main
+   
+```
+
+### Vercel (with Python support)
+
+1. **Create `vercel.json`**
+   
+```json
+   {
+     "builds": [
+       {
+         "src": "app.py",
+         "use": "vercel-python"
+       }
+     ],
+     "routes": [
+       {
+         "src": "/(.*)",
+         "dest": "app.py"
+       }
+     ]
+   }
+   
+```
+2. **Deploy via Vercel CLI**
+
+## 🔧 Configuration
+
+Edit `env_example.txt` and save as `.env`:
+
+```env
+FLASK_APP=app.py
+FLASK_ENV=development
+SECRET_KEY=your-secret-key
+HOST=0.0.0.0
+PORT=5000
+DEBUG=True
+CAMERA_INDEX=0
+OCR_LANGUAGE=en
+OCR_GPU=False
+```
+
+## 📊 Performance Tips
+
+- **Good Lighting**: Improves detection accuracy
+- **Clear View**: Ensure number plate is clearly visible
+- **Stable Camera**: Reduces motion blur
+- **GPU**: Set `OCR_GPU=True` if you have NVIDIA GPU
+
+## 🐛 Troubleshooting
+
+### Camera not opening
+```bash
+# Check camera index (usually 0)
+# Try different index: CAMERA_INDEX=1
+```
+
+### EasyOCR model download issues
+- First run downloads model automatically (~60MB)
+- Ensure stable internet connection
+
+### Low FPS
+- Reduce camera resolution in `app.py`
+- Set `MAX_FPS=15` in environment
+
+### Memory issues
+- Close other applications
+- Use `opencv-python-headless` instead of `opencv-python`
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📝 License
+
+This project is licensed under the MIT License.
+
+## 👨‍💻 Author
+
+**Your Name**
+- GitHub: [@yourusername](https://github.com/yourusername)
+- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourusername)
+
+## 🙏 Acknowledgments
+
+- [OpenCV](https://opencv.org/) for computer vision capabilities
+- [EasyOCR](https://github.com/JaidedAI/EasyOCR) for text recognition
+- [Flask](https://flask.palletsprojects.com/) for the web framework
+
+---
+
+⭐ **Star this repository** if you found it helpful!
+
+📧 **Questions?** Open an issue on GitHub

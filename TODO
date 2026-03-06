@@ -1,0 +1,85 @@
+# 🚗 Vehicle Number Plate Detection - Project TODO
+
+## ✅ Completed Tasks
+
+- [x] Create `requirements.txt` - All Python dependencies
+- [x] Create `app.py` - Flask backend with real-time video processing
+- [x] Create `templates/index.html` - Modern web interface
+- [x] Create `static/style.css` - Portfolio-ready styling
+- [x] Create `static/script.js` - Frontend JavaScript
+- [x] Create `Procfile` - Deployment configuration
+- [x] Create `env_example.txt` - Environment variables template
+- [x] Create `README.md` - Complete documentation
+- [x] Create `test_setup.py` - Setup verification script
+
+## 📋 Next Steps (For You)
+
+### Step 1: Install Dependencies
+```bash
+# Open terminal and run:
+pip install -r requirements.txt
+```
+
+### Step 2: Test Setup
+```bash
+python test_setup.py
+```
+
+### Step 3: Run the Application
+```bash
+python app.py
+```
+
+### Step 4: View in Browser
+```
+Open: http://localhost:5000
+```
+
+## ☁️ Deployment Options
+
+### Option 1: Render.com (Recommended - Free)
+1. Push project to GitHub
+2. Create account at [render.com](https://render.com)
+3. New Web Service → Connect GitHub
+4. Build: `pip install -r requirements.txt`
+5. Start: `gunicorn app:app`
+6. Add environment variables
+
+### Option 2: Railway.app
+1. Push to GitHub
+2. Create project at [railway.app](https://railway.app)
+3. Deploy from GitHub repository
+
+### Option 3: Heroku
+```bash
+heroku create your-app-name
+git push heroku main
+```
+
+## 📱 Portfolio Features
+
+- ✅ Real-time video streaming
+- ✅ AI-powered number plate detection
+- ✅ OCR text extraction
+- ✅ Modern, responsive design
+- ✅ Mobile-friendly interface
+- ✅ Deployment-ready configuration
+
+## 🎯 Expected Outcome
+
+After deployment, you'll have a live URL like:
+- `https://your-app-name.onrender.com`
+- `https://your-app-name.railway.app`
+
+This can be added to your portfolio as a **Live Project Demo** showcasing:
+- Computer Vision skills
+- Full-stack development
+- Real-time applications
+- Cloud deployment
+
+## 📞 Support
+
+If you encounter issues:
+1. Run `python test_setup.py` to diagnose
+2. Check README.md for troubleshooting
+3. Ensure camera permissions are granted

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Number Plate Detection | Real-Time AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-car"></i>
+                <span>PlateAI</span>
+            </div>
+            <div class="status-indicator">
+                <span class="status-dot active"></span>
+                <span>Live Detection</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="video-section">
+                <div class="video-container">
+                    <img src="{{ url_for('video_feed') }}" alt="Live Video Feed" id="videoStream">
+                    <div class="overlay">
+                        <div class="loading-spinner" id="loadingSpinner">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <span>Initializing AI Model...</span>
+                        </div>
+                    <div class="video-controls">
+                        <button id="toggleBtn" class="control-btn active">
+                            <i class="fas fa-pause"></i>
+                            <span>Pause</span>
+                        </button>
+                        <button id="captureBtn" class="control-btn">
+                            <i class="fas fa-camera"></i>
+                            <span>Capture</span>
+                        </button>
+                    </div>
+            </div>
+
+            <div class="info-section">
+                <div class="detection-result">
+                    <h2><i class="fas fa-id-card"></i> Detected Number Plate</h2>
+                    <div class="plate-display">
+                        <span id="plateText">Waiting for detection...</span>
+                    </div>
+                    <div class="confidence-meter">
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" id="confidenceFill"></div>
+                        <span id="confidenceText">Confidence: --</span>
+                    </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-eye"></i>
+                        <h3>Real-Time</h3>
+                        <p>Live video processing</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-brain"></i>
+                        <h3>AI Powered</h3>
+                        <p>EasyOCR + OpenCV</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-bolt"></i>
+                        <h3>Fast</h3>
+                        <p>Instant detection</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Accurate</h3>
+                        <p>High precision</p>
+                    </div>
+
+                <div class="tech-stack">
+                    <h3>Technologies Used</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag"><i class="fab fa-python"></i> Python</span>
+                        <span class="tech-tag"><i class="fas fa-eye"></i> OpenCV</span>
+                        <span class="tech-tag"><i class="fas fa-font"></i> EasyOCR</span>
+                        <span class="tech-tag"><i class="fas fa-flask"></i> Flask</span>
+                        <span class="tech-tag"><i class="fab fa-js"></i> JavaScript</span>
+                    </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Built with <i class="fas fa-heart"></i> using Computer Vision & AI</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

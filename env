@@ -1,0 +1,23 @@
+# Environment Configuration for Vehicle Number Plate Detection App
+# Copy this file to .env and fill in your values
+
+# Flask Configuration
+FLASK_APP=app.py
+FLASK_ENV=development
+SECRET_KEY=your-secret-key-here
+
+# Server Configuration
+HOST=0.0.0.0
+PORT=5000
+DEBUG=True
+
+# Camera Configuration
+CAMERA_INDEX=0
+
+# OCR Configuration
+OCR_LANGUAGE=en
+OCR_GPU=False
+
+# Performance Settings
+FRAME_SKIP=0
+MAX_FPS=30
