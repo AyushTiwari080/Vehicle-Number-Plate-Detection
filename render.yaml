@@ -1,7 +1,8 @@
 services:
   - type: web
     name: vehicle-number-plate-detection
-    runtime: python-3.11
+    env: python
+    pythonVersion: "3.11"
     region: Oregon
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
