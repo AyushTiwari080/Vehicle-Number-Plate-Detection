@@ -47,6 +47,15 @@ def ocr_worker(frame):
 
 def open_camera():
     """Open camera with retries"""
+    # Check if we're in a cloud environment (no camera available)
+    import os
+    RENDER_ENV = os.environ.get('RENDER', False) or os.environ.get('PORT', False)
+    
+    # Skip camera in cloud environments
+    if RENDER_ENV:
+        print("Running in cloud environment - using sample image mode", flush=True)
+        return None
+    
     global camera
     for attempt in range(3):
         cam = cv2.VideoCapture(0)
